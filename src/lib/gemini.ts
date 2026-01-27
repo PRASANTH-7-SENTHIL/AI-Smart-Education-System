@@ -37,9 +37,12 @@ export const geminiService = {
 
     // Specific Use Cases
 
-    async startChat(history: { role: "user" | "model"; parts: string }[] = []) {
+    async startChat(history: { role: "user" | "model"; parts: string }[] = [], systemInstruction?: string) {
         const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
+        const model = genAI.getGenerativeModel({
+            model: GEMINI_MODEL,
+            systemInstruction: systemInstruction
+        });
         return model.startChat({
             history: history.map(h => ({
                 role: h.role,

@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 
 import { AuthProvider } from "@/context/auth-context";
 import { MainLayout } from "@/components/main-layout";
+import { ThemeProvider } from "@/components/theme-provider";
 
 // ... metadata ...
 
@@ -22,18 +23,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
           outfit.variable
         )}
       >
-        <AuthProvider>
-          <MainLayout>
-            {children}
-          </MainLayout>
-        </AuthProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider>
+            <MainLayout>
+              {children}
+            </MainLayout>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

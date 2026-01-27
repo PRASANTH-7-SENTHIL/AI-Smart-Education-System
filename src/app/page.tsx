@@ -12,22 +12,13 @@ import Link from "next/link";
 export default function Home() {
   const modules = [
     {
-      title: "AI Exam System",
-      description: "Automated exam generation, management, and evaluation with AI feedback.",
-      icon: BrainCircuit,
-      href: "/exam/config",
-      color: "text-orange-500",
-      bg: "bg-orange-500/10",
-      stats: "New System",
-    },
-    {
-      title: "AI Exam Proctoring",
+      title: "Exam Configuration",
       description: "Secure, AI-monitored environment with real-time behavioral analysis.",
       icon: UserCheck,
-      href: "/proctoring",
+      href: "/exam/config",
       color: "text-blue-500",
       bg: "bg-blue-500/10",
-      stats: "Proctoring Ready",
+      stats: "Setup Ready",
     },
     {
       title: "Learning Path",
@@ -39,13 +30,22 @@ export default function Home() {
       stats: "3 Paths Generated",
     },
     {
-      title: "Speech-to-Notes AI",
+      title: "Speech to Notes",
       description: "Convert lectures and audio into structured, concise notes automatically.",
       icon: FileAudio,
       href: "/speech-notes",
       color: "text-rose-500",
       bg: "bg-rose-500/10",
       stats: "12 Notes Saved",
+    },
+    {
+      title: "AI Mentor",
+      description: "Get personalized guidance and answers to your academic questions.",
+      icon: BrainCircuit,
+      href: "/mentor",
+      color: "text-orange-500",
+      bg: "bg-orange-500/10",
+      stats: "24/7 Available",
     },
   ];
 
@@ -58,7 +58,7 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
         {modules.map((module) => {
           const Icon = module.icon;
           return (
@@ -90,8 +90,8 @@ export default function Home() {
         })}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="col-span-1 md:col-span-2 lg:col-span-4">
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>
             <CardDescription>
@@ -115,7 +115,7 @@ export default function Home() {
             </div>
           </CardContent>
         </Card>
-        <Card className="col-span-3">
+        <Card className="col-span-1 md:col-span-2 lg:col-span-3">
           <CardHeader>
             <CardTitle>AI Insights</CardTitle>
             <CardDescription>Smart recommendations for you.</CardDescription>

@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation"
 import { Sidebar } from "@/components/sidebar"
+import { MobileSidebar } from "@/components/mobile-sidebar"
 import { useAuth } from "@/context/auth-context"
 import { useEffect } from "react"
 import { Loader2 } from "lucide-react"
@@ -36,8 +37,13 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
     return (
         <div className="flex min-h-screen">
-            {!isPublic && <Sidebar />}
-            <main className={`flex-1 overflow-y-auto bg-muted/20 ${!isPublic ? 'p-8' : ''}`}>
+            {!isPublic && (
+                <>
+                    <Sidebar className="hidden md:flex" />
+                    <MobileSidebar />
+                </>
+            )}
+            <main className={`flex-1 overflow-y-auto bg-muted/20 ${!isPublic ? 'p-4 pt-16 md:p-8' : ''}`}>
                 {children}
             </main>
         </div>

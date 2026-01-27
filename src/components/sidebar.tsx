@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useAuth } from "@/context/auth-context"
+import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
 import {
     LayoutDashboard,
@@ -12,6 +13,8 @@ import {
     BrainCircuit,
     Settings,
     LogOut,
+    FileText,
+    Sun,
 } from "lucide-react"
 
 const sidebarItems = [
@@ -21,10 +24,11 @@ const sidebarItems = [
         icon: LayoutDashboard,
     },
     {
-        title: "Exam Proctoring",
-        href: "/proctoring",
-        icon: UserCheck,
+        title: "Exam Configuration",
+        href: "/exam/config",
+        icon: FileText,
     },
+
     {
         title: "Learning Path",
         href: "/learning-path",
@@ -40,14 +44,20 @@ const sidebarItems = [
         href: "/mentor",
         icon: BrainCircuit,
     },
+    {
+        title: "Theme",
+        href: "/theme",
+        icon: Sun,
+    },
 ]
 
-export function Sidebar() {
+export function Sidebar({ className }: { className?: string }) {
     const pathname = usePathname()
     const { logout } = useAuth()
+    const { theme, setTheme } = useTheme()
 
     return (
-        <div className="flex h-screen w-64 flex-col border-r bg-card/50 backdrop-blur-xl">
+        <div className={cn("flex h-screen w-64 flex-col border-r bg-card/50 backdrop-blur-xl", className)}>
             <div className="flex h-16 items-center px-6">
                 <div className="flex items-center gap-2">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -62,6 +72,23 @@ export function Sidebar() {
                     {sidebarItems.map((item, index) => {
                         const Icon = item.icon
                         const isActive = pathname === item.href
+
+                        // Special handling for Theme "Link" if user added it, or just render standard items
+                        // User added "Theme" to the array, but we want it to check for a specific href/title to act as a button
+                        if (item.title === "Theme") {
+                            return (
+                                <button
+                                    key={index}
+                                    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                                    className={cn(
+                                        "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground text-muted-foreground"
+                                    )}
+                                >
+                                    <Icon className="h-4 w-4" />
+                                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                                </button>
+                            )
+                        }
 
                         return (
                             <Link
