@@ -6,6 +6,8 @@ import {
     User,
     GoogleAuthProvider,
     signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult,
     signOut,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword
@@ -25,6 +27,11 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 
+const isMobile = () => {
+    if (typeof window === "undefined") return false;
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null)
     const [loading, setLoading] = useState(true)
@@ -41,16 +48,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return () => unsubscribe()
     }, [router])
 
+    // Handle Redirect Result (for Mobile)
+    useEffect(() => {
+        getRedirectResult(auth).then((result) => {
+            if (result) {
+                logActivity(result.user.uid, "LOGIN", {
+                    email: result.user.email,
+                    method: "google_redirect"
+                })
+                router.push("/")
+            }
+        }).catch((error) => {
+            console.error("Error with redirect sign-in", error)
+        })
+    }, [router])
+
     const signInWithGoogle = async () => {
         const provider = new GoogleAuthProvider()
         try {
-            const result = await signInWithPopup(auth, provider)
-            // Log Login Activity (non-blocking)
-            logActivity(result.user.uid, "LOGIN", {
-                email: result.user.email,
-                method: "google"
-            })
-            router.push("/")
+            if (isMobile()) {
+                await signInWithRedirect(auth, provider)
+                // Redirect happens immediately, no further code execution here
+            } else {
+                const result = await signInWithPopup(auth, provider)
+                // Log Login Activity (non-blocking)
+                logActivity(result.user.uid, "LOGIN", {
+                    email: result.user.email,
+                    method: "google_popup"
+                })
+                router.push("/")
+            }
         } catch (error) {
             console.error("Error signing in with Google", error)
         }

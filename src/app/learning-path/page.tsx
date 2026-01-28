@@ -8,8 +8,11 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Loader2, Route, BookOpen, Briefcase, Download } from "lucide-react"
 import { geminiService } from "@/lib/gemini"
+import { useAuth } from "@/context/auth-context"
+import { logActivity } from "@/lib/activity-logger"
 
 export default function LearningPathPage() {
+    const { user } = useAuth()
     const [goal, setGoal] = useState("")
     const [background, setBackground] = useState("")
     const [loading, setLoading] = useState(false)
@@ -76,6 +79,14 @@ export default function LearningPathPage() {
             try {
                 const parsed = JSON.parse(cleanResult)
                 setPlan(parsed)
+
+                // Log Activity
+                if (user) {
+                    logActivity(user.uid, "PATH_GENERATED", {
+                        career: goal,
+                        steps: parsed.journey?.length || 0
+                    })
+                }
             } catch (e) {
                 console.error("Failed to parse JSON", e)
                 setError("AI was unable to generate a valid roadmap. Please try again with more details.")

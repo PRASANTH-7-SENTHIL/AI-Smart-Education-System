@@ -15,6 +15,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { useAuth } from "@/context/auth-context"
+import { logActivity } from "@/lib/activity-logger"
 
 interface Message {
     role: "user" | "model"
@@ -121,6 +122,15 @@ export default function MentorPage() {
 
         const userMsg = { role: "user" as const, text: input }
         setMessages(prev => [...prev, userMsg])
+
+        // Log Activity
+        if (user) {
+            logActivity(user.uid, "QUESTION_ASKED", {
+                mode: answerMode,
+                length: input.length
+            })
+        }
+
         setInput("")
         setLoading(true)
 

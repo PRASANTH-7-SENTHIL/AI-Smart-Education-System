@@ -16,6 +16,7 @@ import {
     FileText,
     Sun,
 } from "lucide-react"
+import { Logo } from "@/components/ui/logo"
 
 const sidebarItems = [
     {
@@ -59,11 +60,13 @@ export function Sidebar({ className }: { className?: string }) {
     return (
         <div className={cn("flex h-screen w-64 flex-col border-r bg-card/50 backdrop-blur-xl", className)}>
             <div className="flex h-16 items-center px-6">
-                <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                        <BrainCircuit className="h-5 w-5" />
+                <div className="flex items-center gap-3">
+                    <div className="h-10 w-10">
+                        <Logo />
                     </div>
-                    <span className="text-lg font-bold tracking-tight">EduSmart AI</span>
+                    <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
+                        EduSmart AI
+                    </span>
                 </div>
             </div>
 

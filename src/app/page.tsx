@@ -106,7 +106,7 @@ export default function Home() {
                     <GraduationCap className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div className="grid gap-1">
-                    <p className="text-sm font-medium leading-none">Completed Python Basics</p>
+                    <p className="text-sm font-medium leading-none">Exam Configuration</p>
                     <p className="text-xs text-muted-foreground">2 hours ago</p>
                   </div>
                   <div className="ml-auto font-medium text-emerald-500">+150 XP</div>

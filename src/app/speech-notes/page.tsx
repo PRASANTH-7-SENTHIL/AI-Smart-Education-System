@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Mic, MicOff, FileText, Loader2, Download, Printer } from "lucide-react"
 import { geminiService } from "@/lib/gemini"
 import { Textarea } from "@/components/ui/textarea"
+import { useAuth } from "@/context/auth-context"
+import { logActivity } from "@/lib/activity-logger"
 
 // Define SpeechRecognition types as they might not be in standard TS lib
 declare global {
@@ -16,6 +18,7 @@ declare global {
 }
 
 export default function SpeechNotesPage() {
+    const { user } = useAuth()
     const [isRecording, setIsRecording] = useState(false)
     const [transcript, setTranscript] = useState("")
     const [notes, setNotes] = useState<string | null>(null)
@@ -108,6 +111,13 @@ export default function SpeechNotesPage() {
             // Clean up if AI wraps it in markdown code blocks despite instructions
             const cleanHtml = result.replace(/```html|```/g, "").trim()
             setNotes(cleanHtml)
+
+            if (user) {
+                logActivity(user.uid, "NOTE_SAVED", {
+                    length: transcript.length,
+                    topic_preview: transcript.substring(0, 50) + "..."
+                })
+            }
         } catch (error) {
             console.error("Error generating notes:", error)
         } finally {

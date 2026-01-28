@@ -1,7 +1,9 @@
 "use client"
 
-import { useEffect, useState, Suspense } from "react"
+import { useEffect, useState, Suspense, useRef } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
+import { useAuth } from "@/context/auth-context"
+import { logActivity } from "@/lib/activity-logger"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -21,6 +23,8 @@ interface ExamData {
 
 function ResultsContent() {
     const searchParams = useSearchParams()
+    const { user } = useAuth()
+    const logRef = useRef(false)
     const router = useRouter()
     const [data, setData] = useState<ExamData | null>(null)
     const [score, setScore] = useState(0)
@@ -49,6 +53,19 @@ function ResultsContent() {
         })
         setScore(correct)
     }
+
+    useEffect(() => {
+        if (data && score !== undefined && user && !logRef.current) {
+            logActivity(user.uid, "EXAM_COMPLETE", {
+                score,
+                total: data.total,
+                examType: data.examType,
+                difficulty: data.difficulty,
+                percentage: Math.round((score / data.total) * 100)
+            })
+            logRef.current = true
+        }
+    }, [data, score, user])
 
     useEffect(() => {
         if (data && score !== undefined) {
